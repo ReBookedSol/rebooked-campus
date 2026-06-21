@@ -1,0 +1,34 @@
+project_id = "gzihagvdpdjcoyjpvyvs"
+
+[functions.bobpay]
+verify_jwt = false
+
+[functions.place-cache]
+verify_jwt = false
+
+[functions.place-cache-cleanup]
+verify_jwt = false
+
+[functions.ai-accommodation-assistant]
+verify_jwt = false
+
+[functions.expire-entitlements]
+verify_jwt = false
+
+[functions.send-email]
+verify_jwt = false
+
+[functions.notify-expiring-subscriptions]
+verify_jwt = false
+
+[functions.handle-subscription-event]
+verify_jwt = false
+
+[functions.places-autocomplete]
+verify_jwt = false
+
+[functions.sitemap]
+verify_jwt = false
+
+[functions.address-image]
+verify_jwt = false

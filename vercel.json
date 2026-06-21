@@ -1,0 +1,47 @@
+{
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://gzihagvdpdjcoyjpvyvs.supabase.co/functions/v1/sitemap"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(self), camera=(), microphone=(), payment=(self)"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; form-action 'self' https://*.paystack.co https://*.bobpay.co.za; frame-ancestors 'self'; object-src 'none'; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.openstreetmap.org https://nominatim.openstreetmap.org https://*.tile.openstreetmap.org https://maps.googleapis.com https://*.googleapis.com https://*.googlesyndication.com https://*.doubleclick.net https://fundingchoicesmessages.google.com https://*.google.com https://api.paystack.co https://*.paystack.co https://*.bobpay.co.za https://api.brevo.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://clerk.rebookedsolutions.co.za https://*.clerk.accounts.dev https://challenges.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.googletagservices.com https://fundingchoicesmessages.google.com https://*.google.com https://js.paystack.co https://*.paystack.co https://va.vercel-scripts.com https://clerk.rebookedsolutions.co.za https://*.clerk.accounts.dev https://challenges.cloudflare.com; frame-src 'self' https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.paystack.co https://www.youtube.com https://clerk.rebookedsolutions.co.za https://*.clerk.accounts.dev https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests"
+        }
+      ]
+    }
+  ]
+}

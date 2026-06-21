@@ -1,0 +1,28 @@
+# ReBooked Living
+
+> South Africa's NSFAS-accredited student accommodation directory. Search 4,000+ verified rooms near every major university from R1,500/month.
+
+ReBooked Living helps South African students find safe, affordable, NSFAS-accredited housing near their university. The platform is a discovery directory — students browse, filter, and contact landlords directly. Optional Living Passes (R24.99/5-day, R69.00/month) unlock all photos, all reviews, full interactive maps with satellite view, AI-powered Genius recommendations, and an ad-free experience.
+
+## Pages
+
+- [Home](/): Search and browse student accommodation across South Africa.
+- [Browse listings](/student-accommodation): All verified accommodation with filters by city, university, price, NSFAS, amenities, and gender policy.
+- [Pricing](/pricing): Free tier vs. Living Pass (R24.99 5-day, R69.00 monthly).
+- [Campus](/campus): University profiles, active listing counts, and Gautrain commuter info.
+- [About](/about): Who we are and how the platform works.
+- [Contact](/contact): Reach the support team.
+- [FAQ](/faq): Common questions about NSFAS, safety, payments, and refunds.
+- [Bursary packs](/bursary-packs): Curated bursary information packs for students.
+- [Notifications](/notifications): User notifications (sign-in required).
+
+## Guides
+
+- [How to find student accommodation in South Africa](/guides/how-to-find-student-accommodation-in-south-africa): Step-by-step search and verification guide.
+- [NSFAS accommodation guide](/nsfas-accommodation-guide): How NSFAS-accredited housing works.
+
+## Optional
+
+- [Terms](/terms): Terms and conditions, including the no-refund policy.
+- [Privacy](/privacy): POPIA-compliant privacy policy.
+- [Sign in](/auth): Authentication for landlords, paid users, and admins.
