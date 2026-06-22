@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReBooked Campus — The Digital Student Newspaper</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for authentic premium newspaper look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for newspaper/editor icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandGreen: '#042c2c',
+                        newsCream: '#faf9f5',
+                        newsAccent: '#097969',
+                        newsCrimson: '#b22222',
+                        newsCharcoal: '#1c1c1c'
+                    },
+                    fontFamily: {
+                        fraunces: ['Fraunces', 'serif'],
+                        lora: ['Lora', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                        cinzel: ['Cinzel Decorative', 'serif'],
+                        playfair: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styled classic newspaper lines */
+        .double-rule {
+            border-top: 4px double #042c2c;
+            border-bottom: 1px solid #042c2c;
+            height: 6px;
+            margin: 10px 0;
+        }
+        .single-rule {
+            border-top: 1px solid #042c2c;
+        }
+        /* Custom scrollbar for premium aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #faf9f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #042c2c;
+            border-radius: 4px;
+        }
+        /* Dropcap styling for editorial look */
+        .editorial-dropcap::first-letter {
+            font-family: 'Fraunces', serif;
+            font-size: 4.5rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 8px;
+            font-weight: 800;
+            color: #042c2c;
+        }
+        /* Animations for real-time ticket alerts */
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .8; transform: scale(1.02); }
+        }
+        .pulse-soft {
+            animation: pulse-soft 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-[#faf9f5] text-newsCharcoal font-lora min-h-screen transition-colors duration-300">
+
+    <!-- Customizer & Front Page Theme Switcher Banner -->
+    <div class="bg-[#042c2c] text-white py-2 px-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs md:text-sm">
+            <div class="flex items-center gap-2">
+                <span class="bg-yellow-400 text-black px-2 py-0.5 rounded font-mono font-bold text-[10px]">THEME PREFERENCES</span>
+                <span class="hidden md:inline font-light opacity-90">Customize your digital newspaper front page:</span>
+            </div>
+            
+            <!-- Interactivity controllers -->
+            <div class="flex flex-wrap items-center gap-3 md:gap-6">
+                <!-- Layout Mode -->
+                <div class="flex items-center gap-1.5">
+                    <span class="opacity-75"><i class="fa-solid fa-newspaper mr-1"></i> Front:</span>
+                    <select id="frontLayoutSelector" onchange="changeFrontLayout(this.value)" class="bg-[#032323] text-white border border-[#097969] rounded px-2 py-1 focus:outline-none text-xs cursor-pointer">
+                        <option value="traditional">Traditional Editorial (Original)</option>
+                        <option value="modern">Modern Minimalist</option>
+                        <option value="gothic">Retro Gothic Bold</option>
+                    </select>
+                </div>
+
+                <!-- Font size switcher -->
+                <div class="flex items-center gap-1.5">
+                    <span class="opacity-75"><i class="fa-solid fa-text-height mr-1"></i> Text:</span>
+                    <button onclick="changeFontSize('small')" class="hover:bg-[#097969] px-2 py-0.5 rounded text-xs bg-[#032323]">A-</button>
+                    <button onclick="changeFontSize('medium')" class="hover:bg-[#097969] px-2 py-0.5 rounded text-xs bg-[#097969]">A</button>
+                    <button onclick="changeFontSize('large')" class="hover:bg-[#097969] px-2 py-0.5 rounded text-xs bg-[#032323]">A+</button>
+                </div>
+
+                <!-- Live Campus Pass Ticker Info -->
+                <div class="hidden lg:flex items-center gap-2 bg-[#097969] px-3 py-1 rounded-full text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Live Matcher Sandbox Enabled</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Traditional Newspaper Header / Masthead -->
+    <header class="max-w-7xl mx-auto px-4 pt-6 pb-2 transition-all duration-300" id="editorialHeader">
+        <div class="flex flex-wrap justify-between items-center text-[10px] md:text-xs uppercase font-mono tracking-widest text-[#042c2c] border-b border-[#042c2c] pb-2">
+            <div>VOL. 82 — ISSUE 49</div>
+            <div class="font-bold">MONDAY, 22 JUNE 2026</div>
+            <div>EDITION CA</div>
+        </div>
+
+        <!-- Main Title / Brand Logo -->
+        <div class="text-center py-6 border-b border-[#042c2c]">
+            <h1 id="brandLogo" class="font-fraunces text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-[#042c2c] hover:opacity-90 transition-opacity">
+                ReBooked <span class="font-light italic text-[#097969]">Campus</span>
+            </h1>
+            <p class="font-mono text-xs tracking-widest uppercase mt-3 text-gray-600 flex justify-center items-center gap-2 flex-wrap">
+                <span>The Student Paper</span>
+                <span class="text-[#097969]">•</span>
+                <span>Accredited Res</span>
+                <span class="text-[#097969]">•</span>
+                <span>Ordinary Rebelings</span>
+                <span class="text-[#097969]">•</span>
+                <span class="bg-[#042c2c] text-white px-1.5 py-0.5 font-bold">Campus Wire</span>
+            </p>
+        </div>
+
+        <!-- Traditional Double-Rule Divider -->
+        <div class="double-rule"></div>
+
+        <!-- Top Navigation Bar mimicking image_58801b.jpg -->
+        <nav class="flex justify-between items-center py-1 font-mono text-xs uppercase tracking-wider">
+            <div class="flex space-x-4 md:space-x-8 text-[#042c2c] font-bold">
+                <a href="#news-section" class="hover:underline transition-all">News</a>
+                <a href="#bursaries-section" class="hover:underline transition-all">Bursaries</a>
+                <a href="#housing-section" class="hover:underline transition-all">Residences</a>
+                <a href="#jobs-section" class="hover:underline transition-all">Jobs</a>
+            </div>
+            <div>
+                <a href="#pass-checkout" class="bg-[#042c2c] hover:bg-[#097969] text-white px-4 py-1.5 rounded transition-colors duration-150 shadow-sm font-bold text-xs">
+                    Get a Pass — R45
+                </a>
+            </div>
+        </nav>
+
+        <div class="double-rule"></div>
+    </header>
+
+
+    <!-- Main Editorial Hub (Section 1) -->
+    <main id="mainEditorialContainer" class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Column 1: Main Breaking News Article (Left Side - 8 Cols) -->
+        <article class="lg:col-span-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#042c2c] lg:pr-8" id="news-section">
+            <div>
+                <!-- Breaking Banner -->
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-red-600 text-white font-mono text-xs font-black tracking-widest px-2 py-0.5 uppercase pulse-soft">BREAKING</span>
+                    <span class="font-mono text-xs text-gray-500 uppercase">CAMPUS NEWS • UT R20 REG</span>
+                </div>
+
+                <!-- Main Editorial Title -->
+                <h2 id="mainNewsHeading" class="font-fraunces text-3xl sm:text-4xl md:text-5xl font-black text-[#042c2c] leading-tight tracking-tight mb-4 hover:text-[#097969] transition-colors cursor-pointer" onclick="openArticleModal('allowance')">
+                    NSFAS confirms February allowance hits wallets this Thursday — here's how to check yours.
+                </h2>
+
+                <!-- News Image Element (Ref: image_58801b.jpg) -->
+                <div class="relative group overflow-hidden rounded mb-4 cursor-pointer" onclick="openArticleModal('allowance')">
+                    <img src="image_58801b.jpg" alt="Students walking on campus representing ReBooked Campus" class="w-full h-80 object-cover grayscale contrast-125 transition-all duration-300 group-hover:grayscale-0 group-hover:scale-[1.02]" onerror="this.onerror=null; this.src='https://placehold.co/800x450/042c2c/faf9f5?text=Students+Walking+Campus';">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white text-xs font-mono">
+                        PHOTO: WITS BRAAMFONTEIN CAMPUS • THE REBOOKED NEWSROOM
+                    </div>
+                </div>
+
+                <!-- News Article Summary Paragraph -->
+                <div id="editorialBody" class="text-gray-800 text-base leading-relaxed text-justify mb-4">
+                    <p class="editorial-dropcap">After three weeks of silence on the official NSFAS portal, the scheme pushed an SMS to over 412,000 verified students confirming that the R1,650 living allowance lands on Thursday, 27 February. Millions of rands have been allocated via direct bank deposits, but defaulted Tenetec cards still remain on hold. Students are urged to verify their banking profiles immediately via the portal before the 18:00 cutoff.</p>
+                </div>
+            </div>
+
+            <!-- Read More Button -->
+            <div class="pt-4 border-t border-[#042c2c]/20 flex justify-between items-center">
+                <button onclick="openArticleModal('allowance')" class="text-sm font-mono uppercase font-black tracking-wider text-[#042c2c] hover:text-[#097969] transition-colors">
+                    Read Full Report <i class="fa-solid fa-arrow-right-long ml-1"></i>
+                </button>
+                <div class="flex items-center gap-3 text-gray-400">
+                    <button onclick="likeArticle()" class="hover:text-red-500 transition-all flex items-center gap-1 text-xs">
+                        <i id="likeHeartIcon" class="fa-regular fa-heart"></i> <span id="likeCountText">1,248</span> likes
+                    </button>
+                </div>
+            </div>
+        </article>
+
+        <!-- Column 2: "The Wire" Live Updates Feed (Right Side - 4 Cols) -->
+        <aside class="lg:col-span-4 flex flex-col justify-between">
+            <div class="border border-[#042c2c] p-5 rounded bg-white shadow-sm">
+                <!-- Header -->
+                <div class="flex justify-between items-center border-b-2 border-[#042c2c] pb-3 mb-4">
+                    <h3 class="font-fraunces text-xl font-bold text-[#042c2c] flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-[#097969]"></i> The Wire
+                    </h3>
+                    <span class="font-mono text-xs text-gray-500 uppercase tracking-wider">LIVE • 22 JUN</span>
+                </div>
+
+                <!-- Live Updates Scroller Container -->
+                <div id="wireFeedContainer" class="space-y-4 max-h-[360px] overflow-y-auto pr-1">
+                    
+                    <!-- Update Item 1 -->
+                    <div class="border-b border-[#042c2c]/10 pb-3 transition-all duration-300 hover:bg-[#faf9f5]/50 p-1 rounded">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-mono text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-bold">09:42</span>
+                            <span class="font-mono text-[10px] text-gray-500 font-bold uppercase tracking-widest">WITS</span>
+                        </div>
+                        <p class="text-xs text-gray-800">Auckland Park shuttle service temporarily suspended until 14:00 due to municipal road works. Alternative campus routes remain fully active.</p>
+                    </div>
+
+                    <!-- Update Item 2 -->
+                    <div class="border-b border-[#042c2c]/10 pb-3 transition-all duration-300 hover:bg-[#faf9f5]/50 p-1 rounded">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-mono text-[10px] bg-[#097969]/10 text-[#097969] px-1.5 py-0.5 rounded font-bold">08:15</span>
+                            <span class="font-mono text-[10px] text-gray-500 font-bold uppercase tracking-widest">UCT</span>
+                        </div>
+                        <p class="text-xs text-gray-800">Jammie Shuttle route 4 announces newly scheduled Obz stop starting this Monday. Extended hours will cater to evening lab shifts.</p>
+                    </div>
+
+                    <!-- Update Item 3 -->
+                    <div class="border-b border-[#042c2c]/10 pb-3 transition-all duration-300 hover:bg-[#faf9f5]/50 p-1 rounded">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-mono text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Yesterday</span>
+                            <span class="font-mono text-[10px] text-gray-500 font-bold uppercase tracking-widest">PORTAL</span>
+                        </div>
+                        <p class="text-xs text-gray-800">Supp results are finally live on the primary student portal database. Servers are reporting heavy load; please queue or refresh.</p>
+                    </div>
+
+                    <!-- Update Item 4 -->
+                    <div class="pb-1 transition-all duration-300 hover:bg-[#faf9f5]/50 p-1 rounded">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-mono text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">Yesterday</span>
+                            <span class="font-mono text-[10px] text-gray-500 font-bold uppercase tracking-widest">HOUSING</span>
+                        </div>
+                        <p class="text-xs text-gray-800">Residence check-ins have been officially pushed back by 48 hours to complete safety retrofits. No penalty or late fines apply.</p>
+                    </div>
+
+                </div>
+
+                <!-- Live Input Form - Let users interactively post to "The Wire" -->
+                <div class="mt-4 pt-3 border-t-2 border-[#042c2c]/20">
+                    <p class="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-2 font-bold">CONTRIBUTE A LIVE CAMPUS TIP:</p>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex gap-2">
+                            <input id="wireInputCampus" type="text" placeholder="e.g. UJ" class="w-1/4 px-2 py-1 bg-[#faf9f5] border border-[#042c2c] rounded text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[#097969] text-[#042c2c] uppercase">
+                            <input id="wireInputTip" type="text" placeholder="What's happening on campus?" class="w-3/4 px-2 py-1 bg-[#faf9f5] border border-[#042c2c] rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#097969] text-gray-800">
+                        </div>
+                        <button onclick="submitWireTip()" class="bg-[#097969] hover:bg-[#042c2c] text-white text-xs font-mono py-1 rounded transition-colors font-bold uppercase tracking-widest">
+                            Broadcast Tip
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-[9px] font-mono uppercase tracking-widest text-center text-gray-400 mt-3">
+                    FILED BY STUDENTS. ON CAMPUS.
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Secondary News Column Grid (Section 2 - 3 columns as seen in photo) -->
+    <section class="max-w-7xl mx-auto px-4 py-8 border-t border-b border-[#042c2c]">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Column 1 -->
+            <div class="border-b md:border-b-0 md:border-r border-[#042c2c]/20 pb-6 md:pb-0 md:pr-6 cursor-pointer hover:bg-black/[0.01] p-2 rounded transition-all" onclick="openArticleModal('sasol')">
+                <span class="font-mono text-xs text-[#097969] uppercase font-bold tracking-widest">BURSARIES</span>
+                <h4 class="font-fraunces text-lg font-bold text-[#042c2c] leading-snug mt-1 hover:underline">
+                    Sasol re-opens engineering bursary with a R145,000 ceiling — applications close 04 July.
+                </h4>
+                <p class="text-xs text-gray-600 mt-2 line-clamp-3">
+                    Coverage includes full tuition, textbooks, accommodation allowances and a generous R12k annual stipend, but you need an outstanding 78% average.
+                </p>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="border-b md:border-b-0 md:border-r border-[#042c2c]/20 pb-6 md:pb-0 md:px-3 cursor-pointer hover:bg-black/[0.01] p-2 rounded transition-all" onclick="openArticleModal('braam')">
+                <span class="font-mono text-xs text-[#097969] uppercase font-bold tracking-widest">STUDENT LIFE</span>
+                <h4 class="font-fraunces text-lg font-bold text-[#042c2c] leading-snug mt-1 hover:underline">
+                    Braamfontein landlords drop deposit to one month after WitsSRC ruling.
+                </h4>
+                <p class="text-xs text-gray-600 mt-2 line-clamp-3">
+                    In a massive win for students, major housing blocks have pledged compliance. Affects 14 accredited blocks. South Point and CampusKey already updated templates.
+                </p>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="md:pl-6 cursor-pointer hover:bg-black/[0.01] p-2 rounded transition-all" onclick="openArticleModal('capitec')">
+                <span class="font-mono text-xs text-[#097969] uppercase font-bold tracking-widest">CAMPUS JOBS</span>
+                <h4 class="font-fraunces text-lg font-bold text-[#042c2c] leading-snug mt-1 hover:underline">
+                    Capitec opens 320 part-time student banker roles paying R75/hour, no experience.
+                </h4>
+                <p class="text-xs text-gray-600 mt-2 line-clamp-3">
+                    Flexible hours matching lecture schedules. Shifts run 10:00 to 20:00 across Gauteng and Western Cape branches. Apply with your student ID card online.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Deadlines & AI Bursary Matcher Banner (Section 3 - Dark Theme) -->
+    <section id="bursaries-section" class="bg-[#042c2c] text-white py-12 px-4 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Section Header -->
+            <div class="flex flex-wrap justify-between items-end border-b border-white/20 pb-4 mb-6">
+                <div>
+                    <span class="font-mono text-xs text-emerald-400 uppercase tracking-widest font-bold">SECTION 3 • BURSARIES</span>
+                    <h3 class="font-fraunces text-3xl font-black mt-1 text-emerald-50">Deadlines you can't sleep on</h3>
+                </div>
+                <div class="text-xs text-emerald-400 font-mono">
+                    UPDATED DAILY • 22 JUN
+                </div>
+            </div>
+
+            <!-- Interactive Matcher Tool -->
+            <div class="mb-8 p-5 bg-[#032323] border border-[#097969]/50 rounded-lg shadow-inner">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                        <span class="font-bold text-sm">Interactive AI Bursary Matcher Sandbox</span>
+                    </div>
+                    <span class="text-xs text-gray-400">Find which deadlines you qualify for in 3 clicks:</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <!-- Univ Selector -->
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Your University</label>
+                        <select id="matcherUniv" class="w-full bg-[#042c2c] border border-[#097969] rounded px-3 py-2 text-xs text-white focus:outline-none">
+                            <option value="all">Any South African Uni</option>
+                            <option value="wits">Wits University</option>
+                            <option value="uct">UCT / Stellenbosch</option>
+                            <option value="up">UP / TUT</option>
+                            <option value="ru">Rhodes University</option>
+                        </select>
+                    </div>
+                    <!-- Study Field Selector -->
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Field of Study</label>
+                        <select id="matcherField" class="w-full bg-[#042c2c] border border-[#097969] rounded px-3 py-2 text-xs text-white focus:outline-none">
+                            <option value="all">Any Study Field</option>
+                            <option value="engineering">Engineering / Science</option>
+                            <option value="teaching">Education / Teaching</option>
+                            <option value="retail">Business / Management</option>
+                        </select>
+                    </div>
+                    <!-- Income Slider -->
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Household Income (<span id="incomeValText">R350k</span>)</label>
+                        <input type="range" id="matcherIncome" min="100000" max="800000" step="50000" value="350000" oninput="updateIncomeText(this.value)" class="w-full h-2 bg-[#042c2c] border border-[#097969] rounded-lg appearance-none cursor-pointer accent-[#10b981]">
+                    </div>
+                    <!-- Match Action Button -->
+                    <div class="flex items-end">
+                        <button onclick="calculateBursaryMatches()" class="w-full bg-[#10b981] hover:bg-emerald-400 text-[#042c2c] font-black text-xs font-mono py-2.5 rounded transition-all flex items-center justify-center gap-2 uppercase tracking-wider shadow">
+                            <i class="fa-solid fa-search"></i> Scan Matches
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Matching Result Banner -->
+                <div id="matcherResultBox" class="hidden mt-4 p-3 rounded text-xs font-mono flex items-center justify-between border">
+                    <!-- Dynamic Text will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Deadlines Table (matching image_58801b.jpg) -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse" id="bursariesTable">
+                    <thead>
+                        <tr class="border-b border-white/20 text-xs font-mono text-emerald-400 uppercase">
+                            <th class="py-3 font-semibold">CAMPUS / ACCREDITED</th>
+                            <th class="py-3 font-semibold">BURSARY PROGRAM</th>
+                            <th class="py-3 font-semibold">COVERAGE</th>
+                            <th class="py-3 font-semibold text-right">DAYS LEFT</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10 text-xs sm:text-sm font-mono">
+                        
+                        <!-- Row 1 -->
+                        <tr class="hover:bg-white/5 transition-colors cursor-pointer" onclick="openBursaryDetail('wits-eng')">
+                            <td class="py-4 text-emerald-300 font-bold">WITS / UJ</td>
+                            <td class="py-4 font-sans font-bold">
+                                Engineering Bursary 2025
+                                <span class="block text-xs font-light text-gray-400 font-mono">Civil, Chemical & Electric</span>
+                            </td>
+                            <td class="py-4">R145,000 p.a.</td>
+                            <td class="py-4 text-right text-red-400 font-bold">12 days</td>
+                        </tr>
+
+                        <!-- Row 2 -->
+                        <tr class="hover:bg-white/5 transition-colors cursor-pointer" onclick="openBursaryDetail('uct-teach')">
+                            <td class="py-4 text-emerald-300 font-bold">UCT / SUN</td>
+                            <td class="py-4 font-sans font-bold">
+                                Teaching Bursary — BEd intake
+                                <span class="block text-xs font-light text-gray-400 font-mono">Foundation + Intermediate Phase</span>
+                            </td>
+                            <td class="py-4">Full tuition + stipend</td>
+                            <td class="py-4 text-right text-emerald-400 font-bold">27 days</td>
+                        </tr>
+
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-white/5 transition-colors cursor-pointer" onclick="openBursaryDetail('up-retail')">
+                            <td class="py-4 text-emerald-300 font-bold">UP / TUT</td>
+                            <td class="py-4 font-sans font-bold">
+                                Retail Leadership Award
+                                <span class="block text-xs font-light text-gray-400 font-mono">BCom / Logistics priority</span>
+                            </td>
+                            <td class="py-4">R78,000</td>
+                            <td class="py-4 text-right text-red-400 font-bold">04 days</td>
+                        </tr>
+
+                        <!-- Row 4 -->
+                        <tr class="hover:bg-white/5 transition-colors cursor-pointer" onclick="openBursaryDetail('ru-general')">
+                            <td class="py-4 text-emerald-300 font-bold">RU / NWU</td>
+                            <td class="py-4 font-sans font-bold">
+                                2025 General Application
+                                <span class="block text-xs font-light text-gray-400 font-mono">Open to all faculties</span>
+                            </td>
+                            <td class="py-4">Full cover</td>
+                            <td class="py-4 text-right text-emerald-400 font-bold">Open • Rolling</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer info -->
+            <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-white/10 text-xs">
+                <p class="text-gray-400 max-w-lg">
+                    Pass holders get AI matching across 240+ live bursaries based on your degree, year and household income.
+                </p>
+                <button onclick="scrollToSection('pass-checkout')" class="bg-emerald-500 hover:bg-emerald-400 text-brandGreen px-4 py-2 rounded font-black flex items-center gap-2 transition-all shadow">
+                    See all bursaries <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Student Housing Section (Section 4) -->
+    <section id="housing-section" class="max-w-7xl mx-auto px-4 py-12">
+        <div class="flex flex-wrap justify-between items-end border-b border-[#042c2c] pb-4 mb-8">
+            <div>
+                <span class="font-mono text-xs text-[#097969] uppercase tracking-widest font-bold">SECTION 2 • HOUSING</span>
+                <h3 class="font-fraunces text-3xl font-black text-[#042c2c]">Accredited res near campus</h3>
+            </div>
+            <div class="text-xs text-gray-500 font-mono">
+                213 LISTINGS • SUPER APPROVED
+            </div>
+        </div>
+
+        <!-- Housing Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Res Card 1 -->
+            <div class="border border-[#042c2c]/20 bg-white rounded-lg overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow group">
+                <div>
+                    <!-- Badge Overlay Image -->
+                    <div class="relative overflow-hidden h-64 bg-gray-100">
+                        <span class="absolute top-3 left-3 bg-[#10b981] text-white font-mono text-[10px] font-bold px-2 py-1 rounded tracking-wider z-10">NSFAS APPROVED</span>
+                        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80" alt="South Point Braam" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300">
+                        <div class="absolute bottom-3 right-3 bg-white border border-[#042c2c] px-3 py-1 rounded shadow-sm text-[#042c2c] font-mono font-bold text-sm">
+                            R4,850 <span class="text-[10px] font-normal text-gray-500">/ mo</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-center text-xs font-mono text-gray-500 mb-2">
+                            <span>WITS / UJ ACCREDITED</span>
+                            <span>2 REVIEWS</span>
+                        </div>
+                        <h4 class="font-fraunces text-2xl font-bold text-[#042c2c] group-hover:text-[#097969] transition-colors">
+                            South Point — Braam Street
+                        </h4>
+                        <p class="text-xs text-gray-400 font-mono mt-1 mb-3">BRAAMFONTEIN • 2 MINS TO WALK CAMPUS</p>
+                        
+                        <p class="text-sm text-gray-600 mb-4">
+                            High-speed Wi-Fi, biometric secure access, study lounges, rooftop recreational deck, and active student transport link. Ideal for Wits students.
+                        </p>
+
+                        <!-- Key Features Badges -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Wi-Fi</span>
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Biometrics</span>
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Study Deck</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer Interactivity -->
+                <div class="px-6 pb-6 pt-2 border-t border-[#042c2c]/10 flex flex-wrap justify-between items-center gap-3">
+                    <button onclick="openResModal('southpoint')" class="text-xs font-mono uppercase font-black text-[#042c2c] hover:underline">
+                        Unlock Photos & Floor Plan →
+                    </button>
+                    <button onclick="simulateResInquiry('South Point — Braam Street')" class="bg-[#042c2c] hover:bg-[#097969] text-white text-xs font-mono font-bold px-3 py-1.5 rounded transition-all shadow">
+                        Request Viewing
+                    </button>
+                </div>
+            </div>
+
+            <!-- Res Card 2 -->
+            <div class="border border-[#042c2c]/20 bg-white rounded-lg overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow group">
+                <div>
+                    <!-- Badge Overlay Image -->
+                    <div class="relative overflow-hidden h-64 bg-gray-100">
+                        <span class="absolute top-3 left-3 bg-[#042c2c] text-emerald-400 font-mono text-[10px] font-bold px-2 py-1 rounded tracking-wider z-10">LIVESTUDENT - TRUSTED</span>
+                        <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80" alt="CampusKey Observatory" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300">
+                        <div class="absolute bottom-3 right-3 bg-white border border-[#042c2c] px-3 py-1 rounded shadow-sm text-[#042c2c] font-mono font-bold text-sm">
+                            R6,100 <span class="text-[10px] font-normal text-gray-500">/ mo</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-center text-xs font-mono text-gray-500 mb-2">
+                            <span>UCT ACCREDITED</span>
+                            <span>5 REVIEWS</span>
+                        </div>
+                        <h4 class="font-fraunces text-2xl font-bold text-[#042c2c] group-hover:text-[#097969] transition-colors">
+                            CampusKey — Observatory
+                        </h4>
+                        <p class="text-xs text-gray-400 font-mono mt-1 mb-3">OBSERVATORY • 5 MIN TO Jammie BUS STOP</p>
+                        
+                        <p class="text-sm text-gray-600 mb-4">
+                            Premium single studio apartments, fully furnished, weekly cleaning included, gym access, game room lounge, and backup generators for uninterrupted study.
+                        </p>
+
+                        <!-- Key Features Badges -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Backup Gen</span>
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Free Gym</span>
+                            <span class="bg-[#faf9f5] border border-[#042c2c]/10 text-gray-700 text-[10px] px-2 py-0.5 rounded font-mono">Furnished</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer Interactivity -->
+                <div class="px-6 pb-6 pt-2 border-t border-[#042c2c]/10 flex flex-wrap justify-between items-center gap-3">
+                    <button onclick="openResModal('campuskey')" class="text-xs font-mono uppercase font-black text-[#042c2c] hover:underline">
+                        Unlock Photos & Floor Plan →
+                    </button>
+                    <button onclick="simulateResInquiry('CampusKey — Observatory')" class="bg-[#042c2c] hover:bg-[#097969] text-white text-xs font-mono font-bold px-3 py-1.5 rounded transition-all shadow">
+                        Request Viewing
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Get the Campus Pass - Interactivity Callout (Section 5) -->
+    <section id="pass-checkout" class="max-w-7xl mx-auto px-4 py-8 mb-12">
+        <div class="bg-[#faf9f5] border-2 border-[#042c2c] p-6 sm:p-10 rounded-xl relative overflow-hidden shadow-sm">
+            
+            <!-- Red Price Tag Badge -->
+            <div class="absolute top-4 right-4 bg-red-600 text-white font-mono text-xs font-bold px-4 py-1.5 rounded transform rotate-3 shadow-md tracking-widest uppercase">
+                R45 / WEEK
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Details -->
+                <div class="lg:col-span-7">
+                    <span class="font-mono text-xs text-[#097969] font-bold uppercase tracking-widest">CLASSIFIED • PAGE 7</span>
+                    <h3 class="font-fraunces text-3xl sm:text-4xl font-black text-[#042c2c] mt-2 leading-tight">
+                        Get the <span class="italic text-[#097969] underline">Campus Pass</span> — see what's actually behind the door.
+                    </h3>
+                    
+                    <p class="text-sm text-gray-700 mt-4 leading-relaxed max-w-xl">
+                        One price. Full access to genuine student verification checklists, real student landlord reviews, campus-specific safety walking maps, and an interactive matching engine built for the modern scholar. Cancellation takes exactly 8 seconds inside the dashboard.
+                    </p>
+
+                    <!-- Interactive Switcher (Weekly vs Monthly) -->
+                    <div class="mt-6 flex items-center gap-4 bg-[#042c2c]/5 p-2 rounded-lg w-fit">
+                        <button id="toggleWeekly" onclick="togglePassPlan('weekly')" class="bg-[#042c2c] text-white px-4 py-1.5 rounded text-xs font-mono font-bold transition-all">
+                            Weekly — R45
+                        </button>
+                        <button id="toggleMonthly" onclick="togglePassPlan('monthly')" class="text-gray-600 hover:text-black px-4 py-1.5 rounded text-xs font-mono font-bold transition-all">
+                            Monthly — R129
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Benefits List & Interactive Payment CTA -->
+                <div class="lg:col-span-5 bg-white border border-[#042c2c]/20 p-6 rounded-lg shadow-sm">
+                    <ul class="space-y-2 text-xs font-mono text-gray-700 mb-6">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-[#10b981] mt-0.5"></i>
+                            <span>Full listing photos & room floor plans</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-[#10b981] mt-0.5"></i>
+                            <span>Verified student-only landlord reviews</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-[#10b981] mt-0.5"></i>
+                            <span>Interactive crime & safety walking maps</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-[#10b981] mt-0.5"></i>
+                            <span>Live automated matching (240+ bursaries)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-[#10b981] mt-0.5"></i>
+                            <span>Instant email alerts tailored to your major</span>
+                        </li>
+                    </ul>
+
+                    <!-- Call To Actions with mock trigger -->
+                    <div class="space-y-3">
+                        <button onclick="triggerPaymentModal()" class="w-full bg-[#042c2c] hover:bg-[#097969] text-white font-mono font-bold py-3 rounded transition-all text-sm tracking-wider uppercase shadow-md flex items-center justify-center gap-2">
+                            <span id="passButtonText">Activate weekly pass - R45</span>
+                        </button>
+                        <div class="flex justify-between items-center text-[10px] text-gray-400 font-mono">
+                            <span>PAY WITH EFT, CARD OR CAPITEC</span>
+                            <span class="text-green-600"><i class="fa-solid fa-lock"></i> SECURED</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Beautiful Bottom Footer -->
+    <footer class="bg-[#042c2c] text-gray-300 py-12 px-4 border-t-4 border-[#097969]">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="md:col-span-2">
+                    <h4 class="font-fraunces text-2xl font-bold text-white mb-3">
+                        ReBooked <span class="text-[#097969]">Solutions</span>
+                    </h4>
+                    <p class="text-xs text-gray-400 leading-relaxed max-w-sm mb-4">
+                        Built in South Africa, for South African students. Campus is part of the ReBooked ecosystem—dedicated to transforming accommodation safety and academic accessibility.
+                    </p>
+                    <div class="flex gap-4 text-gray-400">
+                        <a href="#" class="hover:text-[#10b981] transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                        <a href="#" class="hover:text-[#10b981] transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#" class="hover:text-[#10b981] transition-colors"><i class="fa-brands fa-tiktok text-lg"></i></a>
+                        <a href="#" class="hover:text-[#10b981] transition-colors"><i class="fa-solid fa-rss text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Navigation -->
+                <div>
+                    <h5 class="font-mono text-xs text-emerald-400 font-bold uppercase tracking-wider mb-4">CAMPUS</h5>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li><a href="#housing-section" class="hover:text-white transition-colors">Res Residences</a></li>
+                        <li><a href="#bursaries-section" class="hover:text-white transition-colors">Bursaries Database</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Part-time Jobs</a></li>
+                        <li><a href="#news-section" class="hover:text-white transition-colors">Local Student News</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Portal Admin -->
+                <div>
+                    <h5 class="font-mono text-xs text-emerald-400 font-bold uppercase tracking-wider mb-4">PARTNERS</h5>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li><a href="#" class="hover:text-white transition-colors">List a property</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Landlord portal</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sponsor a Bursary</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">University API Integrations</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Double-rule at bottom -->
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-[10px] font-mono text-gray-400">
+                <div>© 2026 REBOOKED SOLUTIONS (PTY) LTD • CAPE TOWN</div>
+                <div class="mt-2 md:mt-0 uppercase tracking-widest text-emerald-400 hover:underline cursor-pointer">CAMPUS.REBOOKEDSOLUTIONS.CO.ZA</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GENERAL DIALOG MODAL (For Article previews, Bursary specs, and Payment Sandbox) -->
+    <div id="generalModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#faf9f5] border-2 border-[#042c2c] w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden transition-all transform scale-95 duration-200" id="modalContainer">
+            
+            <!-- Modal Header -->
+            <div class="bg-[#042c2c] text-white px-6 py-4 flex justify-between items-center">
+                <span id="modalHeaderCategory" class="font-mono text-[10px] uppercase tracking-widest bg-emerald-500 text-brandGreen px-2 py-0.5 rounded font-bold">INFO REPORT</span>
+                <button onclick="closeModal()" class="text-white hover:text-red-400 transition-colors text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Modal Content (Dynamically Injected) -->
+            <div id="modalContentArea" class="p-6 max-h-[70vh] overflow-y-auto">
+                <!-- dynamic content -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-[#faf9f5] px-6 py-4 border-t border-[#042c2c]/10 flex justify-end gap-3" id="modalFooterArea">
+                <button onclick="closeModal()" class="px-4 py-2 border border-[#042c2c] text-xs font-mono uppercase font-bold hover:bg-[#042c2c]/5 rounded">
+                    Dismiss
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- INTERACTION LOGIC & SIMULATIONS -->
+    <script>
+        // Global State
+        let currentPassPlan = 'weekly';
+        let currentLikes = 1248;
+        let userLiked = false;
+
+        // Custom Layout Switcher
+        function changeFrontLayout(layoutType) {
+            const body = document.body;
+            const header = document.getElementById('editorialHeader');
+            const logo = document.getElementById('brandLogo');
+            const mainContainer = document.getElementById('mainEditorialContainer');
+            const mainNewsHeading = document.getElementById('mainNewsHeading');
+
+            // Reset classes
+            body.classList.remove('bg-gray-100', 'bg-white', 'bg-[#faf9f5]');
+            logo.className = 'font-bold transition-all';
+            header.className = 'max-w-7xl mx-auto px-4 pt-6 pb-2 transition-all duration-300';
+            mainNewsHeading.className = 'font-bold cursor-pointer transition-colors';
+
+            if (layoutType === 'traditional') {
+                // Classic newspaper look exactly like image_58801b.jpg
+                body.classList.add('bg-[#faf9f5]');
+                logo.className = 'font-fraunces text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-[#042c2c]';
+                mainNewsHeading.className = 'font-fraunces text-3xl sm:text-4xl md:text-5xl font-black text-[#042c2c] leading-tight tracking-tight mb-4 hover:text-[#097969]';
+                showFloatingNotification('Applied Original Traditional Newspaper style! Enjoy the nostalgic South African publication feel.');
+            } else if (layoutType === 'modern') {
+                // Modern tech blog look
+                body.classList.add('bg-white');
+                logo.className = 'font-inter text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-slate-900';
+                mainNewsHeading.className = 'font-inter text-3xl sm:text-4xl md:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4 hover:text-emerald-600';
+                showFloatingNotification('Applied Modern Minimalist Layout! Clean typography optimized for high-speed screens.');
+            } else if (layoutType === 'gothic') {
+                // High contrast Gothic retro
+                body.classList.add('bg-amber-50');
+                logo.className = 'font-cinzel text-3xl sm:text-4xl md:text-6xl font-black tracking-normal text-[#b22222]';
+                mainNewsHeading.className = 'font-playfair text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#b22222] leading-none mb-4 hover:text-black';
+                showFloatingNotification('Applied Retro Gothic layout! Deep contrasts, alternative serif styling, and bold margins.');
+            }
+        }
+
+        // Adjust text size
+        function changeFontSize(size) {
+            const editorialBody = document.getElementById('editorialBody');
+            if (size === 'small') {
+                editorialBody.style.fontSize = '0.875rem';
+            } else if (size === 'medium') {
+                editorialBody.style.fontSize = '1rem';
+            } else if (size === 'large') {
+                editorialBody.style.fontSize = '1.125rem';
+            }
+        }
+
+        // Like Article Simulator
+        function likeArticle() {
+            const heartIcon = document.getElementById('likeHeartIcon');
+            const likeCountText = document.getElementById('likeCountText');
+            
+            if (!userLiked) {
+                currentLikes++;
+                heartIcon.className = 'fa-solid fa-heart text-red-500 scale-125 transition-transform duration-200';
+                userLiked = true;
+                showFloatingNotification('You liked this article! Your vote supports student-led journalism.');
+            } else {
+                currentLikes--;
+                heartIcon.className = 'fa-regular fa-heart scale-100';
+                userLiked = false;
+            }
+            likeCountText.innerText = currentLikes.toLocaleString();
+        }
+
+        // Add Live Wire Tip
+        function submitWireTip() {
+            const campusInput = document.getElementById('wireInputCampus');
+            const tipInput = document.getElementById('wireInputTip');
+            const feedContainer = document.getElementById('wireFeedContainer');
+
+            if (!tipInput.value.trim()) {
+                showFloatingNotification('Please enter a tip message before submitting.');
+                return;
+            }
+
+            const campus = campusInput.value.trim() ? campusInput.value.trim().toUpperCase() : "GENERAL";
+            const message = tipInput.value.trim();
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Create new update element
+            const tipEl = document.createElement('div');
+            tipEl.className = 'border-b border-[#042c2c]/10 pb-3 p-1 rounded bg-yellow-50/70 animate-pulse';
+            tipEl.innerHTML = `
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-bold">${timeStr}</span>
+                    <span class="font-mono text-[10px] text-gray-500 font-bold uppercase tracking-widest">${campus}</span>
+                    <span class="bg-emerald-500 text-white font-mono text-[8px] px-1 rounded uppercase">NEW</span>
+                </div>
+                <p class="text-xs text-gray-800">${message}</p>
+            `;
+
+            // Insert at the top of feed
+            feedContainer.insertBefore(tipEl, feedContainer.firstChild);
+
+            // Reset input
+            tipInput.value = "";
+            campusInput.value = "";
+
+            showFloatingNotification(`Campus tip broadcasted successfully to all live visitors!`);
+
+            // Calm down animation
+            setTimeout(() => {
+                tipEl.classList.remove('bg-yellow-50/70', 'animate-pulse');
+            }, 3000);
+        }
+
+        // Bursary Matcher Simulation logic
+        function updateIncomeText(val) {
+            const formatted = 'R' + (val / 1000).toLocaleString() + 'k';
+            document.getElementById('incomeValText').innerText = formatted;
+        }
+
+        function calculateBursaryMatches() {
+            const uni = document.getElementById('matcherUniv').value;
+            const field = document.getElementById('matcherField').value;
+            const income = parseInt(document.getElementById('matcherIncome').value);
+            const resultBox = document.getElementById('matcherResultBox');
+
+            resultBox.classList.remove('hidden');
+            resultBox.className = 'mt-4 p-3 rounded text-xs font-mono flex items-center justify-between border bg-emerald-50 border-[#10b981] text-brandGreen animate-bounce';
+
+            let matchCount = 0;
+            let matchString = "";
+
+            if (uni === 'all' && field === 'all') {
+                matchCount = 8;
+                matchString = "Found 8 active general options matching any university background.";
+            } else if (uni === 'wits' && field === 'engineering') {
+                matchCount = 1;
+                matchString = "Perfect match: 'Sasol Engineering Bursary 2025' covers you up to R145,000 p.a.";
+            } else if (uni === 'uct' && field === 'teaching') {
+                matchCount = 1;
+                matchString = "Perfect match: 'Teaching Bursary - BEd intake' is available with monthly stipend.";
+            } else if (income < 350000) {
+                matchCount = 3;
+                matchString = "Matched 3 public and institutional bursaries for households under R350,000 threshold.";
+            } else {
+                matchCount = 2;
+                matchString = "Found 2 matching options across standard private grants (UP / General Rolling).";
+            }
+
+            resultBox.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check-double text-emerald-600"></i>
+                    <span><strong>Success:</strong> ${matchString}</span>
+                </div>
+                <button onclick="scrollToSection('pass-checkout')" class="underline font-bold text-[#042c2c] hover:text-[#097969]">Lock-in Application</button>
+            `;
+
+            setTimeout(() => {
+                resultBox.classList.remove('animate-bounce');
+            }, 1000);
+        }
+
+        // Toggle Payment Plans
+        function togglePassPlan(plan) {
+            const btnWeekly = document.getElementById('toggleWeekly');
+            const btnMonthly = document.getElementById('toggleMonthly');
+            const checkoutButtonText = document.getElementById('passButtonText');
+
+            if (plan === 'weekly') {
+                currentPassPlan = 'weekly';
+                btnWeekly.className = 'bg-[#042c2c] text-white px-4 py-1.5 rounded text-xs font-mono font-bold transition-all';
+                btnMonthly.className = 'text-gray-600 hover:text-black px-4 py-1.5 rounded text-xs font-mono font-bold transition-all';
+                checkoutButtonText.innerText = "Activate weekly pass - R45";
+            } else {
+                currentPassPlan = 'monthly';
+                btnMonthly.className = 'bg-[#042c2c] text-white px-4 py-1.5 rounded text-xs font-mono font-bold transition-all';
+                btnWeekly.className = 'text-gray-600 hover:text-black px-4 py-1.5 rounded text-xs font-mono font-bold transition-all';
+                checkoutButtonText.innerText = "Activate monthly pass - R129 (Save 35%)";
+            }
+        }
+
+        // Scroll helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Float notification helper
+        function showFloatingNotification(msg) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-5 right-5 bg-[#042c2c] text-white px-4 py-3 rounded-lg shadow-xl text-xs font-mono z-50 flex items-center gap-2 border border-emerald-400 max-w-sm transition-all transform translate-y-10 opacity-0';
+            notification.innerHTML = `
+                <i class="fa-solid fa-bell text-yellow-400"></i>
+                <span>${msg}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            // Trigger animation
+            setTimeout(() => {
+                notification.classList.remove('translate-y-10', 'opacity-0');
+            }, 100);
+
+            // Auto dismiss
+            setTimeout(() => {
+                notification.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 4500);
+        }
+
+        // MODAL MANAGEMENT CONTROLS
+        function openModal() {
+            const modal = document.getElementById('generalModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('generalModal');
+            const container = document.getElementById('modalContainer');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        // Injected Content Generators for Interactive Modals
+        function openArticleModal(type) {
+            const category = document.getElementById('modalHeaderCategory');
+            const content = document.getElementById('modalContentArea');
+            const footer = document.getElementById('modalFooterArea');
+
+            if (type === 'allowance') {
+                category.innerText = "BREAKING REPORT";
+                content.innerHTML = `
+                    <h3 class="font-fraunces text-3xl font-black text-[#042c2c] mb-4">NSFAS confirms February allowance hits wallets this Thursday — here's how to check yours.</h3>
+                    <p class="font-mono text-xs text-gray-500 mb-6">FILED BY: THANDO CELE & REBECCA NKOSI • PHOTOS BY REBOOKED PRESS</p>
+                    <div class="space-y-4 text-sm text-gray-700 leading-relaxed">
+                        <p><strong>Johannesburg</strong> — The National Student Financial Aid Scheme (NSFAS) administrator addressed student representatives early this morning to clarify ongoing system concerns regarding payment integration.</p>
+                        <p>After a string of technical audits disrupted the January distribution cycles, authorities confirmed that the direct payments of <strong>R1,650</strong> living allowance for verified college and university applicants will resume with retroactive clearance.</p>
+                        <blockquote class="border-l-4 border-[#097969] pl-4 italic bg-[#faf9f5]/80 py-2 font-mono text-xs text-[#042c2c]">
+                            "Students on the direct bank platform do not need to re-link templates. If your profile status reads 'Disbursement Active', the electronic transaction will execute automatically this Thursday by 23:59."
+                        </blockquote>
+                        <p>However, over 80,000 users registered under Tenetec and eZaga systems remain in active evaluation queue pending biometric audit logs. Representatives urge all students to verify current contact numbers immediately to prevent transaction failures.</p>
+                    </div>
+                `;
+            } else if (type === 'sasol') {
+                category.innerText = "BURSARY BRIEF";
+                content.innerHTML = `
+                    <h3 class="font-fraunces text-2xl font-bold text-[#042c2c] mb-4">Sasol Engineering & Applied Sciences Bursary Program</h3>
+                    <div class="space-y-3 text-sm text-gray-700 font-mono">
+                        <div class="bg-white p-3 border border-[#042c2c]/10 rounded">
+                            <strong>Closing Date:</strong> 04 July 2026<br>
+                            <strong>Target Faculty:</strong> BEng / BSc Engineering (Chemical, Mechanical, Electronic)<br>
+                            <strong>Annual Value:</strong> Up to R145,000 + R12,000 personal stipend
+                        </div>
+                        <h4 class="font-sans font-bold text-base text-[#042c2c] mt-4">Key Eligibility Rules:</h4>
+                        <ul class="list-disc pl-5 space-y-1 text-xs">
+                            <li>Must hold 78% average overall score across Physics & Mathematics HG.</li>
+                            <li>Registered full-time student status at Wits, UP, UCT, or NWU.</li>
+                            <li>Valid South African National Identity Card holder.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (type === 'braam') {
+                category.innerText = "MUNICIPAL REPORT";
+                content.innerHTML = `
+                    <h3 class="font-fraunces text-2xl font-bold text-[#042c2c] mb-4">Braamfontein Landlords Capitulate to WitsSRC Deposit Caps</h3>
+                    <p class="text-xs text-gray-500 font-mono mb-4">THE HOUSING WATCHDOG • REBOOKED INVESTIGATES</p>
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <p>Following a continuous two-week protest action and legal negotiation chaired by the Wits Student Representative Council, three premier accommodation coalitions serving Braamfontein and Johannesburg CBD signed an agreement capping upfront rental deposits to a single month's flat fee.</p>
+                        <p>Historically, private institutions demanded double deposits up to R11,000 before allocating double shared rooms—effectively locking out financially constrained scholars. Properties implementing updated systems include South Point, Gateway, and CampusSpace blocks.</p>
+                    </div>
+                `;
+            } else if (type === 'capitec') {
+                category.innerText = "CAREER FLASH";
+                content.innerHTML = `
+                    <h3 class="font-fraunces text-2xl font-bold text-[#042c2c] mb-4">Capitec Part-Time Banker Scheme</h3>
+                    <div class="space-y-4 text-sm text-gray-700 font-mono bg-white p-4 border border-[#042c2c]/10 rounded">
+                        <p><strong>Position:</strong> Digital Consulting Host (Part-time)</p>
+                        <p><strong>Hourly Compensation:</strong> R75.00/hour plus weekend lunch allowances.</p>
+                        <p><strong>Locations Available:</strong> Rosebank, Braamfontein, Hatfield, Stellenbosch Central, Rondebosch.</p>
+                        <p><strong>Requirements:</strong> No banking experience required. Candidates need sharp interpersonal communication skills, digital literacy, and high energy.</p>
+                    </div>
+                `;
+            }
+
+            footer.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 border border-[#042c2c] text-xs font-mono uppercase font-bold hover:bg-[#042c2c]/5 rounded">Close</button>
+                <button onclick="simulateAction()" class="bg-[#042c2c] text-white px-4 py-2 text-xs font-mono uppercase font-bold hover:bg-[#097969] rounded">Save Article</button>
+            `;
+
+            openModal();
+        }
+
+        function openBursaryDetail(id) {
+            const category = document.getElementById('modalHeaderCategory');
+            const content = document.getElementById('modalContentArea');
+            const footer = document.getElementById('modalFooterArea');
+
+            category.innerText = "BURSARY PROFILE";
+            content.innerHTML = `
+                <h3 class="font-fraunces text-2xl font-bold text-[#042c2c] mb-3">Academic Grant Detail Sheet</h3>
+                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded mb-4 font-mono text-xs text-brandGreen">
+                    <p><strong>Current Match Rating:</strong> 96% Compatible with your current browser profile settings.</p>
+                    <p><strong>Next Official Audit Run:</strong> Tomorrow 09:00 SAST</p>
+                </div>
+                <div class="space-y-3 text-sm text-gray-700 font-mono">
+                    <p>This is a certified listing verified by the ReBooked Campus academic compliance officers. Applying via this system routes your paperwork directly into the sponsor HR review portal, bypassing external third-party queue systems.</p>
+                    <div class="border-t border-[#042c2c]/10 pt-3">
+                        <p class="font-sans font-bold text-[#042c2c]">Required Supporting Documents:</p>
+                        <ul class="list-decimal pl-5 space-y-1 mt-1 text-xs">
+                            <li>Certified copy of National ID document.</li>
+                            <li>Latest official academic progress reports / Matric Certificates.</li>
+                            <li>Proof of family/household gross income certificate.</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            footer.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 border border-[#042c2c] text-xs font-mono uppercase font-bold hover:bg-[#042c2c]/5 rounded">Close Details</button>
+                <button onclick="triggerPaymentModal()" class="bg-[#097969] text-white px-4 py-2 text-xs font-mono uppercase font-bold hover:bg-[#042c2c] rounded">Get Pass to Unlock Full Apply Link</button>
+            `;
+
+            openModal();
+        }
+
+        function openResModal(id) {
+            const category = document.getElementById('modalHeaderCategory');
+            const content = document.getElementById('modalContentArea');
+            const footer = document.getElementById('modalFooterArea');
+
+            category.innerText = "VIRTUAL ROOM INSPECT";
+            
+            const title = id === 'southpoint' ? 'South Point — Braam Street' : 'CampusKey — Observatory';
+            const price = id === 'southpoint' ? 'R4,850' : 'R6,100';
+            const location = id === 'southpoint' ? 'Braamfontein, Johannesburg' : 'Observatory, Cape Town';
+
+            content.innerHTML = `
+                <h3 class="font-fraunces text-2xl font-bold text-[#042c2c] mb-2">${title}</h3>
+                <p class="text-xs text-gray-500 font-mono mb-4">${location} • ${price} Monthly</p>
+                
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="bg-gray-200 h-32 rounded overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover grayscale">
+                        <span class="absolute bottom-1 left-1 bg-black/60 text-white font-mono text-[9px] px-1 rounded">Bedroom View</span>
+                    </div>
+                    <div class="bg-gray-200 h-32 rounded overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover grayscale">
+                        <span class="absolute bottom-1 left-1 bg-black/60 text-white font-mono text-[9px] px-1 rounded">Common Kitchen</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-xs font-mono text-gray-700 bg-white p-3 border border-[#042c2c]/10 rounded">
+                    <p class="font-bold text-[#042c2c]">Student Verification Safety Checklist:</p>
+                    <p class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Biometric fingerprint gates operational. (Checked 2 days ago)</p>
+                    <p class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Generator automatically triggers during Loadshedding Stages 1-6.</p>
+                    <p class="text-red-500"><i class="fa-solid fa-circle-exclamation"></i> Water backup tanks reserve has 24 hours total capacity.</p>
+                </div>
+            `;
+
+            footer.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 border border-[#042c2c] text-xs font-mono uppercase font-bold hover:bg-[#042c2c]/5 rounded">Cancel</button>
+                <button onclick="simulateResInquiry('${title}')" class="bg-[#042c2c] text-white px-4 py-2 text-xs font-mono uppercase font-bold hover:bg-[#097969] rounded">Request Viewing Appointment</button>
+            `;
+
+            openModal();
+        }
+
+        // Simulating Residence Viewing Inquiries
+        function simulateResInquiry(resName) {
+            closeModal();
+            showFloatingNotification(`Your inquiry for "${resName}" has been submitted! A campus housing assistant will WhatsApp you shortly.`);
+        }
+
+        // Checkout & Payment Sandboxed Modal
+        function triggerPaymentModal() {
+            const category = document.getElementById('modalHeaderCategory');
+            const content = document.getElementById('modalContentArea');
+            const footer = document.getElementById('modalFooterArea');
+
+            category.innerText = "SECURE SANDBOX CHECKOUT";
+            
+            const cost = currentPassPlan === 'weekly' ? 'R45.00' : 'R129.00';
+            const renewal = currentPassPlan === 'weekly' ? 'weekly' : 'monthly';
+
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <i class="fa-solid fa-shield-halved text-[#097969] text-4xl mb-2"></i>
+                    <h3 class="font-fraunces text-2xl font-bold text-[#042c2c]">ReBooked Campus Pass Payment</h3>
+                    <p class="text-xs text-gray-500 font-mono">Plan: ${currentPassPlan.toUpperCase()} — ${cost}</p>
+                </div>
+
+                <div class="bg-white border border-[#042c2c]/10 p-4 rounded-lg mb-4 space-y-4">
+                    <!-- Method Selector -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="selectPaymentMethod('card')" id="payBtnCard" class="border border-[#042c2c] bg-[#042c2c]/5 text-xs font-mono py-2 rounded font-bold text-[#042c2c]">
+                            <i class="fa-regular fa-credit-card block text-base mb-1"></i> Credit Card
+                        </button>
+                        <button onclick="selectPaymentMethod('capitec')" id="payBtnCapitec" class="border border-gray-200 hover:border-[#042c2c] text-xs font-mono py-2 rounded font-bold text-gray-600">
+                            <i class="fa-solid fa-mobile-screen-button block text-base mb-1"></i> Capitec Pay
+                        </button>
+                        <button onclick="selectPaymentMethod('eft')" id="payBtnEft" class="border border-gray-200 hover:border-[#042c2c] text-xs font-mono py-2 rounded font-bold text-gray-600">
+                            <i class="fa-solid fa-building-columns block text-base mb-1"></i> Instant EFT
+                        </button>
+                    </div>
+
+                    <!-- Payment Details form -->
+                    <div id="paymentFormArea" class="space-y-3 pt-2">
+                        <div>
+                            <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Cardholder Name</label>
+                            <input type="text" id="cardName" placeholder="e.g. S. Cele" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#097969]">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-2">
+                                <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Card Number</label>
+                                <input type="text" id="cardNumber" placeholder="4242 •••• •••• 4242" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#097969]">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">CVV / Security</label>
+                                <input type="password" id="cardCvv" placeholder="•••" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-gray-400 font-mono text-center">
+                    By clicking submit, you authorize a mock deduction of ${cost} for immediate sandboxed simulation. No actual funds are exchanged.
+                </p>
+            `;
+
+            footer.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 border border-[#042c2c] text-xs font-mono uppercase font-bold hover:bg-[#042c2c]/5 rounded">Cancel</button>
+                <button onclick="processMockPayment('${cost}')" class="bg-emerald-600 text-white px-4 py-2 text-xs font-mono uppercase font-bold hover:bg-[#042c2c] rounded">Process Secure Payment</button>
+            `;
+
+            openModal();
+        }
+
+        function selectPaymentMethod(method) {
+            const btnCard = document.getElementById('payBtnCard');
+            const btnCapitec = document.getElementById('payBtnCapitec');
+            const btnEft = document.getElementById('payBtnEft');
+            const formArea = document.getElementById('paymentFormArea');
+
+            // Reset buttons
+            [btnCard, btnCapitec, btnEft].forEach(btn => {
+                btn.className = 'border border-gray-200 hover:border-[#042c2c] text-xs font-mono py-2 rounded font-bold text-gray-600';
+            });
+
+            if (method === 'card') {
+                btnCard.className = 'border border-[#042c2c] bg-[#042c2c]/5 text-xs font-mono py-2 rounded font-bold text-[#042c2c]';
+                formArea.innerHTML = `
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Cardholder Name</label>
+                        <input type="text" id="cardName" placeholder="e.g. S. Cele" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="4242 •••• •••• 4242" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">CVV</label>
+                            <input type="password" id="cardCvv" placeholder="•••" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                        </div>
+                    </div>
+                `;
+            } else if (method === 'capitec') {
+                btnCapitec.className = 'border border-[#042c2c] bg-[#042c2c]/5 text-xs font-mono py-2 rounded font-bold text-[#042c2c]';
+                formArea.innerHTML = `
+                    <div class="p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900 mb-2">
+                        Receive a direct Capitec App approval notification right on your phone. Fast, secure, and needs no credit card entry.
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Capitec Cell Number / ID Number</label>
+                        <input type="text" id="capitecUser" placeholder="e.g. +27 82 123 4567" class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                    </div>
+                `;
+            } else if (method === 'eft') {
+                btnEft.className = 'border border-[#042c2c] bg-[#042c2c]/5 text-xs font-mono py-2 rounded font-bold text-[#042c2c]';
+                formArea.innerHTML = `
+                    <div>
+                        <label class="block text-[10px] uppercase font-mono text-gray-400 mb-1">Select Bank</label>
+                        <select class="w-full bg-[#faf9f5] border border-[#042c2c] rounded px-3 py-2 text-xs focus:outline-none">
+                            <option>Standard Bank</option>
+                            <option>FNB / RMB</option>
+                            <option>Nedbank</option>
+                            <option>Absa</option>
+                            <option>TymeBank</option>
+                        </select>
+                    </div>
+                `;
+            }
+        }
+
+        function processMockPayment(cost) {
+            closeModal();
+            showFloatingNotification(`Secure payment simulator active... processing payment of ${cost}.`);
+            
+            setTimeout(() => {
+                showFloatingNotification(`Success! Welcome to Campus Pass! All accommodation floor plans, safety logs, and AI match indices are now fully unlocked for this browser session.`);
+            }, 2000);
+        }
+
+        function simulateAction() {
+            closeModal();
+            showFloatingNotification(`Action simulated successfully! Saved content to local profile index.`);
+        }
+
+        // On document launch events
+        window.onload = function() {
+            showFloatingNotification("Welcome back to ReBooked Campus! Explore student news or play with layout preferences at the top.");
+        }
+    </script>
+</body>
+</html>

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, Search, Menu, LogOut } from "lucide-react";
+import { GraduationCap, Search, Menu, LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useAuth, useClerk } from "@clerk/clerk-react";
+import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 
-const Layout = ({ children, showFooter = true, fixedHeight = false }: { children: React.ReactNode, showFooter?: boolean, fixedHeight?: boolean }) => {
+const Layout = ({ children, showFooter = true, fixedHeight = false, noPaddingTop = false }: { children: React.ReactNode, showFooter?: boolean, fixedHeight?: boolean, noPaddingTop?: boolean }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoaded, isSignedIn, userId } = useAuth();
+  const { user } = useUser();
   const { signOut } = useClerk();
   const isLoggedIn = !!isSignedIn;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -71,96 +72,149 @@ const Layout = ({ children, showFooter = true, fixedHeight = false }: { children
     } finally { setIsSubmitting(false); }
   };
 
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      setIsMobileMenuOpen(false);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <div className={`flex flex-col pt-16 ${fixedHeight ? "h-screen overflow-hidden" : "min-h-screen"}`}>
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm transition-shadow duration-300">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-md bg-primary flex items-center justify-center">
-                <Home className="text-primary-foreground w-4 h-4" />
+      <div className={`flex flex-col ${noPaddingTop ? "pt-0" : "pt-20"} ${fixedHeight ? "h-screen overflow-hidden" : "min-h-screen"}`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 px-4 transition-all duration-500 flex justify-center ${
+          scrolled ? "py-2" : "py-4"
+        }`}>
+          <div className={`w-full transition-all duration-500 flex items-center justify-between ${
+            scrolled 
+              ? "max-w-4xl bg-white/85 border border-white/40 rounded-full shadow-lg px-4 py-2 scale-95 backdrop-blur-lg" 
+              : "max-w-full bg-transparent border-transparent px-2 py-0 backdrop-blur-none"
+          }`}>
+            <Link to="/" className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-md flex-shrink-0 ${
+                scrolled ? "bg-primary text-white" : "bg-white text-zinc-950"
+              }`}>
+                <GraduationCap className="w-4.5 h-4.5" />
               </div>
-              <span className="text-lg font-semibold tracking-tight">ReBooked <span style={{ color: "#2d6e55" }}>Living</span></span>
+              <span className={`text-xs sm:text-sm font-bold tracking-tight flex items-center gap-1 transition-colors duration-500 ${
+                scrolled ? "text-zinc-950" : "text-white"
+              }`}>
+                ReBooked <span className="text-primary font-bold">Campus</span>
+              </span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
-              <Link to="/student-accommodation" className="text-base font-medium hover:underline underline-offset-4">
-                Browse
-              </Link>
-              <Link to="/campus-guide" className="text-base font-medium hover:underline underline-offset-4">
-                ReBooked Campus
-              </Link>
-              <Link to="/rebooked-travel" className="text-base font-medium hover:underline underline-offset-4">
-                ReBooked Travel
-              </Link>
-              <Link to={isLoggedIn ? "/profile" : "/auth"} className="text-base font-medium hover:underline underline-offset-4">
-                {isLoggedIn ? "Profile" : "Sign In"}
+            <div className="hidden md:flex items-center gap-1">
+              {[
+                { to: "/student-accommodation", label: "Accommodation" },
+                { to: "/campus-guide", label: "Campus" },
+                { to: "/rebooked-travel", label: "Travel" },
+                { to: "/pricing", label: "Pricing" },
+              ].map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${
+                    location.pathname === to
+                      ? scrolled
+                        ? "text-zinc-950 bg-black/10"
+                        : "text-white bg-white/20"
+                      : scrolled
+                        ? "text-zinc-600 hover:text-zinc-950 hover:bg-black/5"
+                        : "text-white/80 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center gap-2">
+              <Link
+                to={isLoggedIn ? "/profile" : "/auth"}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 shadow-sm inline-block truncate max-w-[200px] ${
+                  scrolled
+                    ? "bg-zinc-950 text-white hover:bg-zinc-900"
+                    : "bg-white text-zinc-950 hover:bg-zinc-100"
+                }`}
+              >
+                {isLoggedIn ? (user?.primaryEmailAddress?.emailAddress || "Profile") : "Sign In"}
               </Link>
               {isLoggedIn && (
-                <Button onClick={handleLogout} variant="ghost" size="icon" className="h-10 w-10">
-                  <LogOut className="w-5 h-5" />
+                <Button 
+                  onClick={handleLogout} 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`h-8 w-8 rounded-full transition-colors duration-300 ${
+                    scrolled ? "text-zinc-500 hover:text-zinc-950 hover:bg-black/5" : "text-white/80 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  <LogOut className="w-4 h-4" />
                 </Button>
               )}
             </div>
 
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
+              <Link
+                to={isLoggedIn ? "/profile" : "/auth"}
+                className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all duration-300 shadow-sm truncate max-w-[120px] ${
+                  scrolled
+                    ? "bg-zinc-950 text-white hover:bg-zinc-900"
+                    : "bg-white text-zinc-950 hover:bg-zinc-100"
+                }`}
+              >
+                {isLoggedIn ? (user?.firstName || "Profile") : "Sign In"}
+              </Link>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className={`h-8 w-8 rounded-full transition-colors duration-300 ${
+                  scrolled ? "text-zinc-950 hover:bg-black/5" : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               </Button>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      {/* Mobile Menu Dropdown */}
-      <div className={`fixed md:hidden top-16 left-0 right-0 z-40 bg-white shadow-xl overflow-hidden transition-all duration-300 ease-in-out origin-top ${isMobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
-        <div className="container mx-auto px-4 py-4 space-y-2">
-            <Link
-              to="/student-accommodation"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium"
-            >
-              Browse
-            </Link>
-            <Link
-              to="/campus-guide"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium"
-            >
-              ReBooked Campus
-            </Link>
-            <Link
-              to="/rebooked-travel"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium"
-            >
-              ReBooked Travel
-            </Link>
-            <Link
-              to="/pricing"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium"
-            >
-              Pricing
-            </Link>
-            <div className="border-t border-primary/10 my-2 pt-2">
+        {/* Mobile Menu */}
+        <div className={`fixed md:hidden left-4 right-4 z-40 bg-white/95 border border-zinc-200/80 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ease-in-out origin-top ${
+          scrolled ? "top-16" : "top-20"
+        } ${isMobileMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"} backdrop-blur-md`}>
+          <div className="px-4 py-3 space-y-1">
+            {[
+              { to: "/student-accommodation", label: "Accommodation" },
+              { to: "/campus-guide", label: "Campus" },
+              { to: "/rebooked-travel", label: "Travel" },
+              { to: "/pricing", label: "Pricing" },
+            ].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-lg text-zinc-700 hover:text-zinc-950 hover:bg-black/5 transition-all text-sm font-semibold"
+              >
+                {label}
+              </Link>
+            ))}
+            <div className="border-t border-zinc-200/60 my-1.5 pt-1.5">
               <Link
                 to={isLoggedIn ? "/profile" : "/auth"}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium"
+                className="block px-4 py-2.5 rounded-lg text-zinc-700 hover:text-zinc-950 hover:bg-black/5 transition-all text-sm font-semibold"
               >
-                {isLoggedIn ? "Profile" : "Sign In"}
+                {isLoggedIn ? "Profile Dashboard" : "Sign In"}
               </Link>
               {isLoggedIn && (
                 <Button
                   onClick={handleLogout}
                   variant="ghost"
-                  className="w-full justify-start px-4 py-3 rounded-lg text-foreground hover:bg-primary/10 transition-colors font-medium h-auto flex items-center gap-2"
+                  className="w-full justify-start px-4 py-2.5 rounded-lg text-zinc-600 hover:text-zinc-950 hover:bg-black/5 transition-all text-sm font-semibold h-auto flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                   Logout
@@ -169,6 +223,7 @@ const Layout = ({ children, showFooter = true, fixedHeight = false }: { children
             </div>
           </div>
         </div>
+
 
       <main className={`flex-1 ${fixedHeight ? "overflow-hidden" : ""}`}>
         {children}
@@ -183,7 +238,7 @@ const Layout = ({ children, showFooter = true, fixedHeight = false }: { children
                   <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                     <Home className="text-primary-foreground w-4 h-4" />
                   </div>
-                  <span className="font-bold text-lg">ReBooked <span style={{ color: "#2d6e55" }}>Living</span></span>
+                  <span className="font-bold text-lg">ReBooked <span style={{ color: "#2d6e55" }}>Campus</span></span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Finding quality student accommodation made simple and affordable.
@@ -212,7 +267,7 @@ const Layout = ({ children, showFooter = true, fixedHeight = false }: { children
                   </li>
                   <li>
                     <a href="https://living.rebookedsolutions.co.za" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                      ReBooked Living
+                      ReBooked Campus
                     </a>
                   </li>
                   <li>

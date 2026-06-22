@@ -11,7 +11,7 @@ interface SEOProps {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const BASE_TITLE = "ReBooked Living";
+const BASE_TITLE = "ReBooked Campus";
 const BASE_URL = "https://living.rebookedsolutions.co.za";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/favicon.png`;
 
