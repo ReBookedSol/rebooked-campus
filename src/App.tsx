@@ -15,6 +15,7 @@ import Terms from "./pages/Terms";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import Campus from "./pages/Campus";
+import CampusLanding from "./pages/CampusLanding";
 import ReBookedCampus from "./pages/ReBookedCampus";
 import UniversityProfile from "./pages/UniversityProfile";
 import LandlordDashboard from "./pages/landlord/Dashboard";
@@ -195,7 +196,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/notifications" element={<Notifications />} />
-            <Route path="/campus" element={<Campus />} />
+            <Route path="/campus" element={<CampusLanding />} />
             <Route path="/campus-guide" element={<ReBookedCampus />} />
             <Route path="/university/:id" element={<UniversityProfile />} />
 
